@@ -1,0 +1,4 @@
+Release 0.1 - 18 Mar 2013
+-------------------------
+* Initial Release!
+* Based on WinCDP - https://github.com/chall32/WinCDP
