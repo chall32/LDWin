@@ -5,7 +5,7 @@ LDWin
 Chris Hall 2010-2013 - [chall32.blogspot.com]
 
 <p align="center"> 
-<img src="https://github.com/chall32/LDWin/blob/master/LDWin.png" alt="LDWin is a Link Discovery Protocol Client for Windows"/>
+<img src="https://github.com/chall32/LDWin/blob/master/LDWin.png?raw=true" alt="LDWin is a Link Discovery Protocol Client for Windows"/>
 </p>
 
 ### What is Link Discovery?
@@ -13,8 +13,8 @@ Link discovery is the process of ascertaining information from directly connecte
 
 LDWin supports the following methods of link discovery:
 
-[CDP] - Cisco Discovery Protocol
-[LLDP] - Link Layer Discovery Protocol
++   [CDP] - Cisco Discovery Protocol
++   [LLDP] - Link Layer Discovery Protocol
 
 LDWin is based on [WinCDP] also by Chris Hall
 
@@ -27,23 +27,24 @@ There must be a better way to tell where a network cable goes to without having 
 
 ### How to Use
 **You must have administrative rights to run this program**
-1. Start the program
-2. From the Network Connection: drop down, select the network adaptor over which you wish to obtain network link information
-3. Click "Get Link Data"
-4. LDWin will then listen on the selected network adaptor for link protocol announcements.  It may take up to 60 seconds for an announcement
-5. Once an announcement has been received, the received information will be displayed in the results section
-6. Use the "Save Link Data" button to save the received information into a text file
 
-NOTE: A valid TCP/IP address is not required to receive link information.
+1.   Start the program
+2.   From the "Network Connection:" drop down, select the network adaptor over which you wish to obtain network link information
+3.   Click "Get Link Data"
+4.   LDWin will then listen on the selected network adaptor for link protocol announcements.  It may take up to 60 seconds to receive an announcement
+5.   Once an announcement has been received, the received information will be displayed in the results section
+6.   Use the "Save Link Data" button to save the received information into a text file
+
+NOTE: A valid TCP/IP address is not required to receive valid link information.
 
 ### What's New?
 ***See the [changelog] for what's new in the most recent release.***
 
 
-### [Click here to download latest version](https://github.com/chall32/WinCDP/blob/master/LDWin.exe?raw=true)
+### [Click here to download latest version](https://github.com/chall32/LDWin/blob/master/LDWin.exe?raw=true)
 
 [changelog]: https://github.com/chall32/LDWin/blob/master/ChangeLog.txt
 [chall32.blogspot.com]: http://chall32.blogspot.com
 [CDP]:http://en.wikipedia.org/wiki/Cisco_Discovery_Protocol
 [LLDP]:http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol
-[WinDCP]:https://github.com/chall32/WinCDP
+[WinCDP]:http://github.com/chall32/WinCDP
