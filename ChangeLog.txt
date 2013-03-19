@@ -1,4 +1,14 @@
-Release 0.1 - 18 Mar 2013
+Release 0.2 - 19 Mar 2013
 -------------------------
+* Fix Cisco switch model handling bug
+* Remove logo in bottom left had side of GUI
+* Minor code clean ups
+
+
+Release 0.1 - 18 Mar 2013
+
+-------------------------
+
 * Initial Release!
+
 * Based on WinCDP - https://github.com/chall32/WinCDP

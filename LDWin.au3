@@ -3,13 +3,13 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=network.ico
 #AutoIt3Wrapper_Outfile=LDWin.exe
-#AutoIt3Wrapper_Compression=3
+#AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_Res_Description=Link Discovery for Windows
-#AutoIt3Wrapper_Res_Fileversion=0.0.0.1
+#AutoIt3Wrapper_Res_Fileversion=0.0.0.2
 #AutoIt3Wrapper_Res_LegalCopyright=Chris Hall 2010-2013
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
-#AutoIt3Wrapper_Res_Field=ProductName|WinLDP
-#AutoIt3Wrapper_Res_Field=ProductVersion|0.1
+#AutoIt3Wrapper_Res_Field=ProductName|LDWin
+#AutoIt3Wrapper_Res_Field=ProductVersion|0.2
 #AutoIt3Wrapper_Res_Field=OriginalFileName|LDWin.exe
 #AutoIt3Wrapper_Run_AU3Check=n
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
@@ -17,17 +17,15 @@
 ;===================================================================================================================================================================
 ; LDWin - Link Discovery for Windows - Chris Hall 2010-2013
 ;===================================================================================================================================================================
-$VER = "0.1"
+$VER = "0.2"
 
-#include <Constants.au3>
-#include <WinAPI.au3>
 #include <GuiConstantsEx.au3>
 #include <WindowsConstants.au3>
 #Include <File.au3>
 #Include <String.au3>
 #include <GuiButton.au3>
 #include <ComboConstants.au3>
-$WinLDPVer = "Link Discovery for Windows - v"& $VER &" - Chris Hall - 2010-" & @YEAR
+$WinLDPVer = "LDWin - v"& $VER &" - Chris Hall - 2010-" & @YEAR
 
 if IsAdmin() = 0 then
 	MsgBox(16,"Exiting","This program requires Local Admistrator rights")
@@ -87,17 +85,7 @@ GUICtrlCreateLabel("Switch Model:", 280, 190, 70, 20)
 GUICtrlCreateLabel("Port Duplex:", 280, 220, 70, 20)
 GUICtrlCreateLabel("VTP Mgmt Domain:", 280, 250, 95, 20)
 GUICtrlCreateGroup("Status ", 15, 300, 520, 65)
-GUICtrlCreateLabel($WinLDPVer, 225, 375, 275, 20)
-$pic = GUICreate("", 32, 32, 510, 362, $WS_POPUP,BitOr($WS_EX_LAYERED,$WS_EX_MDICHILD),$gui)
-GUICtrlCreatePic("network.gif", 0, 0, 0, 0)
-GUISetState(@SW_SHOW, $pic)
-GUISetState(@SW_SHOW, $gui)
-
-$hWnd = WinGetHandle("Link Discovery for Windows")
-$iStyle = _WinAPI_GetWindowLong($hWnd, $GWL_STYLE)
-;$iStyle = BitXOR($iStyle, $WS_MAXIMIZEBOX, $WS_MINIMIZEBOX, $WS_SIZEBOX)
-_WinAPI_SetWindowLong($hWnd, $GWL_STYLE, $iStyle)
-_WinAPI_SetWindowPos($hWnd, $HWND_TOP, 0, 0, 0, 0, BitOR($SWP_FRAMECHANGED, $SWP_NOMOVE, $SWP_NOSIZE))
+GUICtrlCreateLabel($WinLDPVer, 350, 375, 275, 20)
 
 	While 1
 		Switch GUIGetMsg()
@@ -138,7 +126,7 @@ Exit
 
 ;******** DIAG MODE ********
 		$TCPDmpPID = Run(@ComSpec & " /c " & @TempDir & '\tcpdump.exe -i \Device\' & $ID & ' -nn -v -s 1500 -c 1 ether[20:2] == 0x2000 >%temp%\Data_Out.txt', "", @SW_HIDE)
-;$TCPDmpPID = "0"
+		;$TCPDmpPID = "0"
 ;******** DIAG MODE ********
 		$Secs = 1
 		$Status1 = GUICtrlCreateLabel("Running ... May take up to 60 seconds between link announcements ...", 120, 320, 350, 20 )
@@ -189,10 +177,12 @@ Do
 	EndIf
 	If StringInStr(FileReadLine($file, $line), "Platform (0x06)") Then
 		$SwitchModel = StringSplit(FileReadLine($file, $line), "'")
-		$SwitchModel = StringStripWS($SwitchModel[2], 6)
 		$SwitchModel = StringUpper($SwitchModel[2])
-		GUICtrlCreateLabel($SwitchModel, 390, 190, 120, 20)
-		FileWriteLine($SaveFile, "Switch Model:	" & $SwitchModel)
+		If StringInStr($SwitchModel, "CISCO") Then
+			$SwitchModel = StringTrimLeft(StringUpper($SwitchModel), 6)
+		EndIf
+			GUICtrlCreateLabel($SwitchModel, 390, 190, 120, 20)
+			FileWriteLine($SaveFile, "Switch Model:	" & $SwitchModel)
 	EndIf
 	If StringInStr(FileReadLine($file, $line), "Duplex (0x0b)") Then
 		$Duplex = StringSplit(FileReadLine($file, $line), ":")
