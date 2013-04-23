@@ -1,4 +1,4 @@
-Release v1.0 - 15 Apr 2013
+Release v1.0 - 23 Apr 2013
 --------------------------
 * RELEASE VERSION!
 * Added Help button help info
