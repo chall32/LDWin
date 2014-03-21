@@ -2,7 +2,7 @@ LDWin
 =====
 
 ## Link Discovery Client for Windows
-Chris Hall 2010-2013 - [chall32.blogspot.com]
+Chris Hall 2010-2014 - [chall32.blogspot.com]
 
 <p align="center"> 
 <img src="https://github.com/chall32/LDWin/blob/master/LDWin.png?raw=true" alt="LDWin is a Link Discovery Protocol Client for Windows"/>
@@ -42,6 +42,11 @@ NOTE: A valid TCP/IP address is not required to receive valid link information.
 
 
 ### [Click here to download latest version](https://github.com/chall32/LDWin/blob/master/LDWin.exe?raw=true)
+
+If LDWin helped you, how about buying me a beer? Use the donate button below. THANK YOU!
+
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KT462HRW7XQ3J)
+
 
 [changelog]: https://github.com/chall32/LDWin/blob/master/ChangeLog.txt
 [chall32.blogspot.com]: http://chall32.blogspot.com

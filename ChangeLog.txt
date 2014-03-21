@@ -1,3 +1,13 @@
+Release 2.0 - xx Mar 2014
+-------------------------
+* Updated to work with Windows 8.x / 2012 Rx
+* Display NIC IP address upon selection of network card
+* Display NIC MAC address upon selection of network card
+* Also save NIC MAC and IP Address to log file
+* All new help dialogue
+* Added donate button - FEEL FREE TO USE!
+
+
 Release v1.0 - 23 Apr 2013
 --------------------------
 * RELEASE VERSION!
