@@ -1,4 +1,4 @@
-Release 2.0 - xx Mar 2014
+Release 2.0 - 21 Mar 2014
 -------------------------
 * Updated to work with Windows 8.x / 2012 Rx
 * Display NIC IP address upon selection of network card
