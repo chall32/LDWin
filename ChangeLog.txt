@@ -1,3 +1,9 @@
+Release 2.1 - 10 Apr 2014
+-------------------------
+* Fixed LLDP detection derp!
+* Minor code clean ups
+
+
 Release 2.0 - 21 Mar 2014
 -------------------------
 * Updated to work with Windows 8.x / 2012 Rx

@@ -5,11 +5,11 @@
 #AutoIt3Wrapper_Outfile=LDWin.exe
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_Res_Description=Link Discovery for Windows
-#AutoIt3Wrapper_Res_Fileversion=2.0.0.0
+#AutoIt3Wrapper_Res_Fileversion=2.1.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Chris Hall 2010-2014
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
 #AutoIt3Wrapper_Res_Field=ProductName|LDWin
-#AutoIt3Wrapper_Res_Field=ProductVersion|2.0
+#AutoIt3Wrapper_Res_Field=ProductVersion|2.1
 #AutoIt3Wrapper_Res_Field=OriginalFileName|LDWin.exe
 #AutoIt3Wrapper_Run_AU3Check=n
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
@@ -17,7 +17,7 @@
 ;===================================================================================================================================================================
 ; LDWin - Link Discovery for Windows - Chris Hall 2010-2014
 ;===================================================================================================================================================================
-$VER = "2.0"
+$VER = "2.1"
 #include <GuiConstantsEx.au3>
 #include <WindowsConstants.au3>
 #include <File.au3>
@@ -25,10 +25,6 @@ $VER = "2.0"
 #include <GuiButton.au3>
 #include <ComboConstants.au3>
 #include<GUIHyperLink.au3>
-
-$LDWinHelp = 99999
-$donate = ""
-$gotit = ""
 
 $WinLDPVer = "LDWin - v" & $VER & " - Chris Hall - 2010-" & @YEAR
 If IsAdmin() = 0 Then
@@ -39,6 +35,9 @@ FileInstall("tcpdump.exe", @TempDir & '\', 1)
 FileInstall("donate.ico", @TempDir & '\', 1)
 GUISetIcon("network.ico")
 
+$LDWinHelp = 99999
+$donate = ""
+$gotit = ""
 $log = FileOpen(@TempDir & "\LinkData.txt", 2)
 $wbemFlagReturnImmediately = 0x10
 $wbemFlagForwardOnly = 0x20
@@ -156,7 +155,7 @@ Func GetCDP($Nic_Friendly)
 	$ID = $IData[2][1]
 
 	;******** DIAG MODE ********
-	$TCPDmpPID = Run(@ComSpec & " /c " & @TempDir & '\tcpdump.exe -i \Device\' & $ID & ' -nn -v -s 1500 -c 1 ether[20:2] == 0x2000 >%temp%\Data_Out.txt', "", @SW_HIDE)
+	$TCPDmpPID = Run(@ComSpec & " /c " & @TempDir & '\tcpdump.exe -i \Device\' & $ID & ' -nn -v -s 1500 -c 1 (ether[12:2]==0x88cc or ether[20:2]==0x2000) >%temp%\Data_Out.txt', "", @SW_HIDE)
 	;$TCPDmpPID = "0"
 	;******** DIAG MODE ********
 	$Secs = 1
@@ -312,6 +311,7 @@ Func OnExit()
 	FileDelete(@TempDir & "\LinkData.txt")
 	FileDelete(@TempDir & "\tcpdump.exe")
 	FileDelete(@TempDir & "\SaveData.txt")
+	FileDelete(@TempDir & "\donate.ico")
 EndFunc   ;==>OnExit
 
 Func Help()
