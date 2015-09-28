@@ -5,26 +5,26 @@
 #AutoIt3Wrapper_Outfile=LDWin.exe
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_Res_Description=Link Discovery for Windows
-#AutoIt3Wrapper_Res_Fileversion=2.1.0.0
-#AutoIt3Wrapper_Res_LegalCopyright=Chris Hall 2010-2014
+#AutoIt3Wrapper_Res_Fileversion=2.2.0.0
+#AutoIt3Wrapper_Res_LegalCopyright=Chris Hall 2010-2015
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
 #AutoIt3Wrapper_Res_Field=ProductName|LDWin
-#AutoIt3Wrapper_Res_Field=ProductVersion|2.1
+#AutoIt3Wrapper_Res_Field=ProductVersion|2.2
 #AutoIt3Wrapper_Res_Field=OriginalFileName|LDWin.exe
 #AutoIt3Wrapper_Run_AU3Check=n
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 ;===================================================================================================================================================================
-; LDWin - Link Discovery for Windows - Chris Hall 2010-2014
+; LDWin - Link Discovery for Windows - Chris Hall 2010-2015
 ;===================================================================================================================================================================
-$VER = "2.1"
+$VER = "2.2"
 #include <GuiConstantsEx.au3>
 #include <WindowsConstants.au3>
 #include <File.au3>
 #include <String.au3>
 #include <GuiButton.au3>
 #include <ComboConstants.au3>
-#include<GUIHyperLink.au3>
+#include <GUIHyperLink.au3>
 
 $WinLDPVer = "LDWin - v" & $VER & " - Chris Hall - 2010-" & @YEAR
 If IsAdmin() = 0 Then
@@ -233,9 +233,46 @@ Func GetCDP($Nic_Friendly)
 				GUICtrlCreateLabel($SwitchName, 140, 183, 370, 20)
 				FileWriteLine($SaveFile, "Switch Name:	" & $SwitchName)
 			EndIf
+			If StringInStr(FileReadLine($file, $line), "Chassis ID TLV (1)") Then
+				$SwitchName = StringSplit(FileReadLine($file, $line), ":")
+				If @error Then
+					$nextline = $line + 1
+					$SwitchName = StringSplit(FileReadLine($file, $nextline), ":")
+					$SwitchNameSize = UBound($SwitchName)
+					If $SwitchNameSize > 3 Then
+						$SWconcat = ""
+						For $i = 2 to $SwitchNameSize - 1
+							$SWconcat = ($SWconcat & $SwitchName[$i] & ":")
+						Next
+						$SwitchName = StringTrimRight($SWconcat, 1)
+					Else
+						$SwitchName = $SwitchName[2]
+					EndIf
+				Else
+					$SwitchName = $SwitchName[2]
+				EndIf
+				$SwitchName = StringStripWS($SwitchName, 3)
+				GUICtrlCreateLabel("", 140, 183, 180, 20)
+				GUICtrlCreateLabel($SwitchName, 140, 183, 370, 20)
+				FileWriteLine($SaveFile, "Switch Name:	" & $SwitchName)
+			EndIf
+			If StringInStr(FileReadLine($file, $line), "Port ID TLV (2)") Then
+				$SwitchPort = StringSplit(FileReadLine($file, $line), ":")
+				If @error Then
+					$nextline = $line + 1
+					$SwitchPort = StringSplit(FileReadLine($file, $nextline), ":")
+					$SwitchPort = $SwitchPort[2]
+				Else
+					$SwitchPort = $SwitchPort[2]
+				EndIf
+				$SwitchPort = StringStripWS($SwitchPort, 3)
+				GUICtrlCreateLabel($SwitchPort, 140, 213, 120, 40)
+				FileWriteLine($SaveFile, "Switch Port:	" & $SwitchPort)
+			EndIf
 			If StringInStr(FileReadLine($file, $line), "Port Description TLV (4)") Then
 				$SwitchPort = StringSplit(FileReadLine($file, $line), ":")
 				$SwitchPort = StringStripWS($SwitchPort[2], 3)
+				GUICtrlCreateLabel("", 140, 213, 120, 20)
 				GUICtrlCreateLabel($SwitchPort, 140, 213, 120, 40)
 				FileWriteLine($SaveFile, "Switch Port:	" & $SwitchPort)
 			EndIf

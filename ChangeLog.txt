@@ -1,3 +1,9 @@
+Release 2.2 - 28 Sept 2015
+--------------------------
+* Added support for LLDP "Chassis ID TLV (1)"
+* Added support for LLDP "Port ID TLV (2)"
+
+
 Release 2.1 - 10 Apr 2014
 -------------------------
 * Fixed LLDP detection derp!
