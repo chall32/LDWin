@@ -15,10 +15,12 @@
 #AutoIt3Wrapper_AU3Check_Parameters=-d -w 1 -w 2 -w 3 -w 4 -w 5 -w 6
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 ;===================================================================================================================================================================
-; LDWin - Link Discovery for Windows - Chris Hall 2010-2015
+; LDWin - Link Discovery for Windows - Chris Hall 2010-2016
 ;===================================================================================================================================================================
-$VER = "2.2"
+$VER = "2.3"
 #include <GuiConstantsEx.au3>
+#include <GuiConstants.au3>
+#include <MsgBoxConstants.au3>
 #include <WindowsConstants.au3>
 #include <File.au3>
 #include <String.au3>
@@ -96,6 +98,14 @@ GUICtrlCreateLabel("Port Duplex:", 280, 243, 70, 20)
 GUICtrlCreateLabel("VTP Mgmt Domain:", 280, 273, 95, 20)
 GUICtrlCreateGroup("Status ", 15, 323, 520, 65)
 GUICtrlCreateLabel($WinLDPVer, 350, 398, 275, 20)
+$ResultSwitchName = GUICtrlCreateInput("", 140, 183, 370, 20, $ES_READONLY)
+$ResultSwitchPort = GUICtrlCreateInput("", 140, 213, 120, 20, $ES_READONLY)
+$ResultVLAN = GUICtrlCreateInput("", 140, 243, 120, 20, $ES_READONLY)
+$ResultSwitchIP = GUICtrlCreateInput("", 140, 273, 120, 20, $ES_READONLY)
+$ResultSwitchModel = GUICtrlCreateInput("", 390, 213, 120, 20, $ES_READONLY)
+$ResultDuplex = GUICtrlCreateInput("", 390, 243, 120, 20, $ES_READONLY)
+$ResultVTP = GUICtrlCreateInput("", 390, 273, 120, 20, $ES_READONLY)
+
 GUISetState()
 While 1
 	$aMsg = GUIGetMsg(1)
@@ -185,24 +195,24 @@ Func GetCDP($Nic_Friendly)
 			If StringInStr(FileReadLine($file, $line), "Device-ID (0x01)") Then
 				$SwitchName = StringSplit(FileReadLine($file, $line), "'")
 				$SwitchName = StringUpper($SwitchName[2])
-				GUICtrlCreateLabel($SwitchName, 140, 183, 370, 20)
+				GUICtrlSetData($ResultSwitchName, $SwitchName)
 				FileWriteLine($SaveFile, "Switch Name:	" & $SwitchName)
 			EndIf
 			If StringInStr(FileReadLine($file, $line), "Port-ID (0x03)") Then
 				$SwitchPort = StringSplit(FileReadLine($file, $line), "'")
-				GUICtrlCreateLabel($SwitchPort[2], 140, 213, 120, 20)
+				GUICtrlSetData($ResultSwitchPort, $SwitchPort[2])
 				FileWriteLine($SaveFile, "Switch Port:	" & $SwitchPort[2])
 			EndIf
 			If StringInStr(FileReadLine($file, $line), "VLAN ID (0x0a)") Then
 				$VLAN = StringSplit(FileReadLine($file, $line), ":")
 				$VLAN = StringStripWS($VLAN[3], 8)
-				GUICtrlCreateLabel($VLAN, 140, 243, 120, 20)
+				GUICtrlSetData($ResultVLAN, $VLAN)
 				FileWriteLine($SaveFile, "VLAN ID:	" & $VLAN)
 			EndIf
 			If StringInStr(FileReadLine($file, $line), "Address (0x02)") Then
 				$SwitchIP = StringSplit(FileReadLine($file, $line), ")")
 				$SwitchIP = StringStripWS($SwitchIP[3], 8)
-				GUICtrlCreateLabel($SwitchIP, 140, 273, 120, 20)
+				GUICtrlSetData($ResultSwitchIP, $SwitchIP)
 				FileWriteLine($SaveFile, "Switch IP:	" & $SwitchIP)
 			EndIf
 			If StringInStr(FileReadLine($file, $line), "Platform (0x06)") Then
@@ -211,26 +221,26 @@ Func GetCDP($Nic_Friendly)
 				If StringInStr($SwitchModel, "CISCO") Then
 					$SwitchModel = StringTrimLeft(StringUpper($SwitchModel), 6)
 				EndIf
-				GUICtrlCreateLabel($SwitchModel, 390, 213, 120, 20)
+				GUICtrlSetData($ResultSwitchModel, $SwitchModel)
 				FileWriteLine($SaveFile, "Switch Model:	" & $SwitchModel)
 			EndIf
 			If StringInStr(FileReadLine($file, $line), "Duplex (0x0b)") Then
 				$Duplex = StringSplit(FileReadLine($file, $line), ":")
 				$Duplex = StringLower(StringStripWS($Duplex[3], 8))
 				$Duplex = _StringProper($Duplex)
-				GUICtrlCreateLabel($Duplex, 390, 243, 120, 20)
+				GUICtrlSetData($ResultDuplex, $Duplex)
 				FileWriteLine($SaveFile, "Switch Duplex:	" & $Duplex)
 			EndIf
 			If StringInStr(FileReadLine($file, $line), "VTP Management Domain (0x09)") Then
 				$VTP = StringSplit(FileReadLine($file, $line), "'")
-				GUICtrlCreateLabel($VTP[2], 390, 273, 120, 20)
+				GUICtrlSetData($ResultVTP, $VTP[2])
 				FileWriteLine($SaveFile, "VTP Mgmt:	" & $VTP[2])
 			EndIf
 			;===== LLDP =========================================================================
 			If StringInStr(FileReadLine($file, $line), "System Name TLV (5)") Then
 				$SwitchName = StringSplit(FileReadLine($file, $line), ":")
 				$SwitchName = StringStripWS(StringUpper($SwitchName[2]), 3)
-				GUICtrlCreateLabel($SwitchName, 140, 183, 370, 20)
+				GUICtrlSetData($ResultSwitchName, $SwitchName)
 				FileWriteLine($SaveFile, "Switch Name:	" & $SwitchName)
 			EndIf
 			If StringInStr(FileReadLine($file, $line), "Chassis ID TLV (1)") Then
@@ -252,8 +262,7 @@ Func GetCDP($Nic_Friendly)
 					$SwitchName = $SwitchName[2]
 				EndIf
 				$SwitchName = StringStripWS($SwitchName, 3)
-				GUICtrlCreateLabel("", 140, 183, 180, 20)
-				GUICtrlCreateLabel($SwitchName, 140, 183, 370, 20)
+				GUICtrlSetData($ResultSwitchName, $SwitchName)
 				FileWriteLine($SaveFile, "Switch Name:	" & $SwitchName)
 			EndIf
 			If StringInStr(FileReadLine($file, $line), "Port ID TLV (2)") Then
@@ -266,20 +275,19 @@ Func GetCDP($Nic_Friendly)
 					$SwitchPort = $SwitchPort[2]
 				EndIf
 				$SwitchPort = StringStripWS($SwitchPort, 3)
-				GUICtrlCreateLabel($SwitchPort, 140, 213, 120, 40)
+				GUICtrlSetData($ResultSwitchPort, $SwitchPort)
 				FileWriteLine($SaveFile, "Switch Port:	" & $SwitchPort)
 			EndIf
 			If StringInStr(FileReadLine($file, $line), "Port Description TLV (4)") Then
 				$SwitchPort = StringSplit(FileReadLine($file, $line), ":")
 				$SwitchPort = StringStripWS($SwitchPort[2], 3)
-				GUICtrlCreateLabel("", 140, 213, 120, 20)
-				GUICtrlCreateLabel($SwitchPort, 140, 213, 120, 40)
+				GUICtrlSetData($ResultSwitchPort, $SwitchPort)
 				FileWriteLine($SaveFile, "Switch Port:	" & $SwitchPort)
 			EndIf
 			If StringInStr(FileReadLine($file, $line), "port vlan id (PVID)") Then
 				$VLAN = StringSplit(FileReadLine($file, $line), ":")
 				$VLAN = StringStripWS($VLAN[2], 3)
-				GUICtrlCreateLabel($VLAN, 140, 243, 120, 20)
+				GUICtrlSetData($ResultVLAN, $VLAN)
 				FileWriteLine($SaveFile, "VLAN ID:	" & $VLAN)
 			EndIf
 			If StringInStr(FileReadLine($file, $line), "Management Address TLV (8)") Then
@@ -291,7 +299,7 @@ Func GetCDP($Nic_Friendly)
 					$SwitchIP = $SwitchIP[2]
 				EndIf
 				$SwitchIP = StringStripWS(StringUpper($SwitchIP[2]), 3)
-				GUICtrlCreateLabel($SwitchIP, 140, 273, 120, 20)
+				GUICtrlSetData($ResultSwitchIP, $SwitchIP)
 				FileWriteLine($SaveFile, "Switch IP:	" & $SwitchIP)
 			EndIf
 			If StringInStr(FileReadLine($file, $line), "System Description TLV (6)") Then
@@ -303,7 +311,7 @@ Func GetCDP($Nic_Friendly)
 					$SwitchModel = $SwitchModel[2]
 				EndIf
 				$SwitchModel = StringStripWS($SwitchModel, 3)
-				GUICtrlCreateLabel($SwitchModel, 390, 213, 120, 40)
+				GUICtrlSetData($ResultSwitchModel, $SwitchModel)
 				FileWriteLine($SaveFile, "Switch Model:	" & $SwitchModel)
 			EndIf
 			$line = $line + 1
@@ -323,13 +331,13 @@ Func GetCDP($Nic_Friendly)
 EndFunc   ;==>GetCDP
 
 Func ClearResults()
-	GUICtrlCreateLabel("", 140, 183, 180, 20)
-	GUICtrlCreateLabel("", 140, 213, 120, 20)
-	GUICtrlCreateLabel("", 140, 243, 120, 20)
-	GUICtrlCreateLabel("", 140, 273, 120, 20)
-	GUICtrlCreateLabel("", 390, 213, 120, 20)
-	GUICtrlCreateLabel("", 390, 243, 120, 20)
-	GUICtrlCreateLabel("", 390, 273, 120, 20)
+	GUICtrlSetData($ResultSwitchName, "")
+	GUICtrlSetData($ResultSwitchPort, "")
+	GUICtrlSetData($ResultVLAN, "")
+	GUICtrlSetData($ResultSwitchIP, "")
+	GUICtrlSetData($ResultSwitchModel, "")
+	GUICtrlSetData($ResultDuplex, "")
+	GUICtrlSetData($ResultVTP, "")
 EndFunc   ;==>ClearResults
 
 Func SaveData()
